@@ -6,6 +6,9 @@ import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Too
 import { Briefcase, ShieldAlert, Sparkles } from 'lucide-react';
 import { Badge, Button, Card, ListingCard, ListingMap, SectionHeading, ViewToggle, useToast } from './components';
 import { categories, categoryOptions, conditionOptions, listings, locationOptions, trendingCategories } from './data/listings';
+import { EmailPreferences } from './components/EmailPreferences';
+import { emailService } from './lib/email';
+import { emailTemplates } from './lib/email-templates';
 import { currency } from './lib/utils';
 import { CrossTrafficAds } from './components/CrossTrafficAds';
 
@@ -148,17 +151,17 @@ export const DetailPage = () => {
           <Card className="space-y-4">
             <h3 className="text-xl font-semibold text-white">Seller card</h3>
             <p className="text-sm text-slate-300">{listing.seller.name} · {listing.seller.phone}</p>
-            <form className="space-y-3" onSubmit={(event) => { event.preventDefault(); push(`Message sent for ${listing.title}.`); }}>
-              <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" placeholder="Your name" />
-              <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" placeholder="Email or phone" />
-              <textarea className="min-h-28 w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" defaultValue={`Hi, is "${listing.title}" still available?`} />
+            <form className="space-y-3" onSubmit={(event) => void (async () => { event.preventDefault(); const form = new FormData(event.currentTarget); const senderName = String(form.get('senderName') || 'Interested buyer'); const senderContact = String(form.get('senderContact') || 'No contact supplied'); const message = String(form.get('message') || `Hi, is "${listing.title}" still available?`); const sellerEmail = emailTemplates.listingInquiry({ listingTitle: listing.title, senderName, senderContact, message, detailUrl: window.location.href }); const confirmation = emailTemplates.inquiryConfirmation({ recipientName: senderName, listingTitle: listing.title, detailUrl: window.location.href }); const results = await Promise.all([ emailService.send({ to: 'hello@kenailistings.com', ...sellerEmail, metadata: { notificationType: 'listing-inquiry', listingId: listing.id } }), senderContact.includes('@') ? emailService.send({ to: senderContact, ...confirmation, metadata: { notificationType: 'listing-inquiry-confirmation', listingId: listing.id } }) : Promise.resolve({ queued: false }) ]); push(results.some((result) => result.queued) ? 'Message sent (email notification may be delayed).' : `Message sent for ${listing.title}.`); event.currentTarget.reset(); })()}>
+              <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" name="senderName" placeholder="Your name" required />
+              <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" name="senderContact" placeholder="Email or phone" required />
+              <textarea className="min-h-28 w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" name="message" defaultValue={`Hi, is "${listing.title}" still available?`} />
               <Button type="submit" className="w-full justify-center">Contact seller</Button>
             </form>
           </Card>
           <Card className="space-y-3">
             <h3 className="text-xl font-semibold text-white">Flag / report</h3>
             <p className="text-sm text-slate-300">Use the admin tools to report scams, prohibited items, or misleading content.</p>
-            <Button className="w-full justify-center bg-white/10" onClick={() => push('Report queued for moderation.')}>Report listing</Button>
+            <Button className="w-full justify-center bg-white/10" onClick={() => void (async () => { const flagEmail = emailTemplates.flaggedContentNotification({ listingTitle: listing.title, reason: 'User-submitted report queued for moderation.', detailUrl: `${window.location.origin}/admin` }); const result = await emailService.send({ to: 'hello@kenailistings.com', ...flagEmail, metadata: { notificationType: 'flagged-content', listingId: listing.id } }); push(result.queued ? 'Report saved. Email notification may be delayed.' : 'Report queued for moderation.'); })()}>Report listing</Button>
           </Card>
           <Card className="space-y-4"><h3 className="text-xl font-semibold text-white">Similar listings</h3>{similar.map((item) => <ListingCard key={item.id} listing={item} />)}</Card>
         </div>
@@ -171,6 +174,7 @@ export const PostPage = () => {
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState({ category: 'For Sale', title: '', description: '', price: '125', contact: 'Text preferred' });
   const steps = ['Category', 'Details', 'Publish'];
+  const { push } = useToast();
 
   return (
     <>
@@ -184,7 +188,7 @@ export const PostPage = () => {
           {step === 2 && <div className="grid gap-4"><input value={draft.contact} onChange={(event) => setDraft((current) => ({ ...current, contact: event.target.value }))} placeholder="Contact preferences" className="rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" /><Card className="bg-accent/10 text-emerald-100">Ready to publish your {draft.category.toLowerCase()} listing.</Card></div>}
           <div className="flex justify-between">
             <Button className="bg-white/10" disabled={step === 0} onClick={() => setStep((current) => Math.max(current - 1, 0))}>Back</Button>
-            <Button onClick={() => setStep((current) => Math.min(current + 1, steps.length - 1))}>{step === steps.length - 1 ? 'Publish' : 'Continue'}</Button>
+            <Button onClick={() => void (async () => { if (step === steps.length - 1) { const renewed = emailTemplates.listingRenewedConfirmation({ listingTitle: draft.title || 'New listing draft', expiresOn: '30 days after publish', dashboardUrl: `${window.location.origin}/dashboard` }); const result = await emailService.send({ to: 'hello@kenailistings.com', ...renewed, subject: `Listing published: ${draft.title || 'New listing draft'}`, metadata: { notificationType: 'listing-created', category: draft.category } }); push(result.queued ? 'Listing published. Email delivery may be delayed.' : 'Listing published and confirmation sent.'); } setStep((current) => Math.min(current + 1, steps.length - 1)) })()}>{step === steps.length - 1 ? 'Publish' : 'Continue'}</Button>
           </div>
         </Card>
       </section>
@@ -208,6 +212,9 @@ export const DashboardPage = () => (
       <Card><ResponsiveContainer width="100%" height={260}><AreaChart data={[{ day: 'Mon', views: 180 }, { day: 'Tue', views: 210 }, { day: 'Wed', views: 260 }, { day: 'Thu', views: 240 }, { day: 'Fri', views: 310 }, { day: 'Sat', views: 330 }, { day: 'Sun', views: 290 }]}><defs><linearGradient id="listingsViews" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#16a34a" stopOpacity={0.55} /><stop offset="95%" stopColor="#16a34a" stopOpacity={0} /></linearGradient></defs><CartesianGrid stroke="#1e293b" /><XAxis dataKey="day" stroke="#94a3b8" /><YAxis stroke="#94a3b8" /><Tooltip /><Area type="monotone" dataKey="views" stroke="#16a34a" fill="url(#listingsViews)" /></AreaChart></ResponsiveContainer></Card>
       <Card><ResponsiveContainer width="100%" height={260}><BarChart data={[{ type: 'For Sale', count: 8 }, { type: 'Jobs', count: 4 }, { type: 'Services', count: 6 }, { type: 'Housing', count: 2 }]}><CartesianGrid stroke="#1e293b" /><XAxis dataKey="type" stroke="#94a3b8" /><YAxis stroke="#94a3b8" /><Tooltip /><Bar dataKey="count" fill="#16a34a" radius={[10, 10, 0, 0]} /></BarChart></ResponsiveContainer></Card>
     </section>
+    <section className="mt-6">
+      <EmailPreferences userEmail="member@kenailistings.com" />
+    </section>
   </>
 );
 
@@ -222,9 +229,9 @@ export const AuthPage = () => {
         <Card className="bg-accent/10"><h1 className="text-3xl font-semibold text-white">Access your listings, saved posts, and moderation tools.</h1><p className="mt-4 text-sm text-emerald-100">Supabase auth is wired for user and admin roles.</p></Card>
         <Card>
           <div className="mb-6 flex rounded-full border border-white/10 bg-slate-900 p-1 text-sm"><button onClick={() => setMode('signin')} className={`rounded-full px-4 py-2 ${mode === 'signin' ? 'bg-accent text-white' : 'text-slate-300'}`}>Sign in</button><button onClick={() => setMode('signup')} className={`rounded-full px-4 py-2 ${mode === 'signup' ? 'bg-accent text-white' : 'text-slate-300'}`}>Create account</button></div>
-          <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); push(`${mode === 'signin' ? 'Sign in' : 'Sign up'} flow ready for Supabase.`); }}>
-            <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" placeholder="Email" />
-            <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" placeholder="Password" type="password" />
+          <form className="space-y-4" onSubmit={(event) => void (async () => { event.preventDefault(); const form = new FormData(event.currentTarget); const email = String(form.get('email') || ''); const password = String(form.get('password') || ''); if (mode === 'signup' && email) { const welcome = emailTemplates.welcomeEmail({ recipientName: email.split('@')[0], dashboardUrl: `${window.location.origin}/dashboard` }); const result = await emailService.send({ to: email, ...welcome, metadata: { notificationType: 'welcome-email' } }); push(result.queued ? 'Sign up saved. Email delivery may be delayed.' : 'Sign up flow ready for Supabase and welcome email delivery.'); } else { push(`${mode === 'signin' ? 'Sign in' : 'Sign up'} flow ready for Supabase.`); } if (!password) return; })()}>
+            <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" name="email" placeholder="Email" />
+            <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" name="password" placeholder="Password" type="password" />
             {mode === 'signup' && <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input type="checkbox" required className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent" /><span>By creating an account, you agree to our <Link to="/terms" className="font-semibold text-accent">Terms of Service</Link> and <Link to="/privacy" className="font-semibold text-accent">Privacy Policy</Link>.</span></label>}
             <Button type="submit" className="w-full justify-center">{mode === 'signin' ? 'Sign in' : 'Create account'}</Button>
           </form>
