@@ -159,6 +159,7 @@ export const Layout = () => {
             </div>
           </div>
         </div>
+        <div className="border-t border-white/10 px-4 py-4 text-center"><div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-400"><Link to="/terms" className="hover:text-white transition">Terms of Service</Link> | <Link to="/privacy" className="hover:text-white transition">Privacy Policy</Link> | <Link to="/cookies" className="hover:text-white transition">Cookie Policy</Link> | <Link to="/dmca" className="hover:text-white transition">DMCA</Link> | <Link to="/acceptable-use" className="hover:text-white transition">Acceptable Use</Link></div></div>
       </footer>
     </div>
   );

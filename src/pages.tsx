@@ -23,6 +23,7 @@ export const HomePage = () => {
           <p className="max-w-2xl text-base text-slate-200">Kenai Listings covers gear, seasonal jobs, contractor services, housing, free stuff, community boards, and barter posts tuned for the Borough.</p>
           <form className="flex flex-col gap-3 sm:flex-row" onSubmit={(event) => { event.preventDefault(); navigate(`/browse?q=${encodeURIComponent(query)}`); }}>
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search listings, jobs, services..." className="flex-1 rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" />
+            <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">By creating an account, you agree to our <Link to="/terms" className="text-sky-400 hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-sky-400 hover:underline">Privacy Policy</Link>.</p>
             <Button type="submit">Search</Button>
           </form>
         </div>
