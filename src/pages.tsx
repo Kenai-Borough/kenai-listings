@@ -7,6 +7,7 @@ import { Briefcase, ShieldAlert, Sparkles } from 'lucide-react';
 import { Badge, Button, Card, ListingCard, ListingMap, SectionHeading, ViewToggle, useToast } from './components';
 import { categories, categoryOptions, conditionOptions, listings, locationOptions, trendingCategories } from './data/listings';
 import { currency } from './lib/utils';
+import { CrossTrafficAds } from './components/CrossTrafficAds';
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export const HomePage = () => {
 
   return (
     <>
-      <Helmet><title>Kenai Listings | Kenai Peninsula Classifieds</title></Helmet>
+      <Helmet><title>Kenai Listings | Kenai Peninsula, Alaska</title><meta name="description" content="Post and browse Kenai classifieds, jobs, services, housing, and free local listings across the Kenai Peninsula with a clean Alaska-first marketplace." /></Helmet>
       <section className="grid gap-8 rounded-[2rem] border border-white/10 bg-rugged p-8 shadow-glow lg:grid-cols-[1.1fr,0.9fr]">
         <div className="space-y-5">
           <Badge className="bg-accent/15 text-emerald-100">Fast local classifieds</Badge>
@@ -49,7 +50,8 @@ export const HomePage = () => {
           ['Move fast', 'Optimized layout, dark mode support, and responsive browsing for quick local deals.'],
         ].map(([title, description]) => <Card key={title}><Sparkles className="h-8 w-8 text-accent" /><h3 className="mt-4 text-xl font-semibold text-white">{title}</h3><p className="mt-3 text-sm text-slate-300">{description}</p></Card>)}
       </section>
-    </>
+          <CrossTrafficAds />
+</>
   );
 };
 

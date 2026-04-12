@@ -5,18 +5,23 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#16a34a" />
-    <meta
-      name="description"
-      content="Kenai Listings is the fast local classifieds hub for buying, selling, hiring, and finding services across the Kenai Peninsula."
-    />
-    <meta property="og:title" content="Kenai Listings | Local Classifieds for the Kenai Peninsula" />
-    <meta
-      property="og:description"
-      content="Browse jobs, housing, gear, free stuff, contractor services, and community posts built for Kenai life."
-    />
+    <meta name="description" content="Post and browse Kenai classifieds, jobs, services, housing, and free local listings across the Kenai Peninsula with a clean Alaska-first marketplace." />
+    <meta name="keywords" content="kenai classifieds, kenai peninsula jobs, buy sell kenai, craigslist kenai alternative, free listings alaska, kenai marketplace, soldotna classifieds, kenai services, kenai jobs board, alaska local classifieds" />
+    <link rel="canonical" href="https://kenailistings.com/" />
+    <meta property="og:title" content="Kenai Listings | Kenai Peninsula, Alaska" />
+    <meta property="og:description" content="Post and browse Kenai classifieds, jobs, services, housing, and free local listings across the Kenai Peninsula with a clean Alaska-first marketplace." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://kenailistings.com" />
+    <meta property="og:url" content="https://kenailistings.com/" />
+    <meta property="og:image" content="https://kenailistings.com/og-image.svg" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Kenai Listings" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kenai Listings | Kenai Peninsula, Alaska" />
+    <meta name="twitter:description" content="Post and browse Kenai classifieds, jobs, services, housing, and free local listings across the Kenai Peninsula with a clean Alaska-first marketplace." />
+    <meta name="twitter:image" content="https://kenailistings.com/og-image.svg" />
+    <meta name="geo.region" content="US-AK" />
+    <meta name="geo.placename" content="Kenai Peninsula, Alaska" />
+    <meta name="theme-color" content="#16a34a" />
     <script>
       (() => {
         const stored = localStorage.getItem('kenai-listings-theme');
@@ -24,7 +29,23 @@
         document.documentElement.classList.toggle('dark', isDark);
       })();
     </script>
-    <title>Kenai Listings | Kenai Peninsula Classifieds</title>
+    <title>Kenai Listings | Kenai Peninsula, Alaska</title>
+    <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "Kenai Listings",
+      "url": "https://kenailistings.com",
+      "areaServed": "Kenai Peninsula Borough, Alaska"
+    },
+    {
+      "@type": "WebSite",
+      "name": "Kenai Listings",
+      "url": "https://kenailistings.com"
+    }
+  ]
+}</script>
   </head>
   <body class="bg-slate-950 text-slate-100 antialiased">
     <div id="root"></div>
