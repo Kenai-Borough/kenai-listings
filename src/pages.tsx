@@ -16,18 +16,24 @@ export const HomePage = () => {
   return (
     <>
       <Helmet><title>Kenai Listings | Kenai Peninsula, Alaska</title><meta name="description" content="Post and browse Kenai classifieds, jobs, services, housing, and free local listings across the Kenai Peninsula with a clean Alaska-first marketplace." /></Helmet>
-      <section className="grid gap-8 rounded-[2rem] border border-white/10 bg-rugged p-8 shadow-glow lg:grid-cols-[1.1fr,0.9fr]">
-        <div className="space-y-5">
+      <section className="relative overflow-hidden grid gap-8 rounded-[2rem] border border-white/10 bg-rugged p-8 shadow-glow lg:grid-cols-[1.1fr,0.9fr]">
+        <div className="absolute inset-0">
+          <img src="/hero-illustration.svg" alt="" aria-hidden="true" className="h-full w-full object-cover opacity-90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/92 via-slate-900/74 to-slate-900/28" />
+        </div>
+        <div className="relative space-y-5">
           <Badge className="bg-accent/15 text-emerald-100">Fast local classifieds</Badge>
           <h1 className="max-w-3xl text-4xl font-semibold text-white sm:text-5xl">Post it free. Find it fast. Keep it local.</h1>
           <p className="max-w-2xl text-base text-slate-200">Kenai Listings covers gear, seasonal jobs, contractor services, housing, free stuff, community boards, and barter posts tuned for the Borough.</p>
           <form className="flex flex-col gap-3 sm:flex-row" onSubmit={(event) => { event.preventDefault(); navigate(`/browse?q=${encodeURIComponent(query)}`); }}>
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search listings, jobs, services..." className="flex-1 rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" />
-            <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">By creating an account, you agree to our <Link to="/terms" className="text-sky-400 hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-sky-400 hover:underline">Privacy Policy</Link>.</p>
             <Button type="submit">Search</Button>
           </form>
         </div>
-        <Card className="grid gap-4 bg-slate-950/70">
+        <Card className="relative grid gap-4 bg-slate-950/70">
+          <div className="overflow-hidden rounded-2xl border border-white/10">
+            <img src="/hero-illustration.svg" alt="" aria-hidden="true" className="h-28 w-full object-cover" />
+          </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {categories.map((category) => <button key={category.id} onClick={() => navigate(`/browse?category=${encodeURIComponent(category.name)}`)} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left text-slate-200"><div className="font-semibold text-white">{category.name}</div><div className="mt-2 text-sm text-slate-400">{category.description}</div></button>)}
           </div>

@@ -1,10 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
-  <rect width="128" height="128" rx="28" fill="#0C1410"/>
-  <rect x="22" y="28" width="84" height="72" rx="18" fill="#16A34A" fill-opacity="0.18" stroke="#16A34A" stroke-width="6"/>
-  <path d="M40 46H88" stroke="#ECFDF5" stroke-width="8" stroke-linecap="round"/>
-  <path d="M40 64H72" stroke="#ECFDF5" stroke-width="8" stroke-linecap="round"/>
-  <path d="M40 82H62" stroke="#ECFDF5" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="87" cy="80" r="12" fill="#16A34A"/>
-  <path d="M86 74V87" stroke="#ECFDF5" stroke-width="6" stroke-linecap="round"/>
-  <path d="M80 80H92" stroke="#ECFDF5" stroke-width="6" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none"><defs><linearGradient id="bg" x1="18" x2="110" y1="12" y2="116" gradientUnits="userSpaceOnUse"><stop stop-color="#14302f"/><stop offset=".58" stop-color="#214843"/><stop offset="1" stop-color="#101827"/></linearGradient></defs><rect width="128" height="128" rx="28" fill="url(#bg)"/><rect x="24" y="27" width="34" height="34" rx="10" fill="#f5f7fb" opacity=".95"/><rect x="71" y="27" width="33" height="34" rx="10" fill="#2eb67d"/><rect x="24" y="72" width="34" height="32" rx="10" fill="#66b2ff"/><rect x="71" y="72" width="33" height="32" rx="10" fill="#f5f7fb" opacity=".9"/><text x="24" y="119" fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="31" font-weight="800">KL</text></svg>
