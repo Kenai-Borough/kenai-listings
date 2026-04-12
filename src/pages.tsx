@@ -225,6 +225,7 @@ export const AuthPage = () => {
           <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); push(`${mode === 'signin' ? 'Sign in' : 'Sign up'} flow ready for Supabase.`); }}>
             <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" placeholder="Email" />
             <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white" placeholder="Password" type="password" />
+            {mode === 'signup' && <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input type="checkbox" required className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent" /><span>By creating an account, you agree to our <Link to="/terms" className="font-semibold text-accent">Terms of Service</Link> and <Link to="/privacy" className="font-semibold text-accent">Privacy Policy</Link>.</span></label>}
             <Button type="submit" className="w-full justify-center">{mode === 'signin' ? 'Sign in' : 'Create account'}</Button>
           </form>
         </Card>
